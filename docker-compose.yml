@@ -1,0 +1,31 @@
+services:
+  postgres:
+    container_name: postgres-consultor-ia
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: consultor-ia
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - consultor-ia
+    restart: unless-stopped
+  mail-dev:
+    container_name: mail-dev-consultor-ia
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - consultor-ia
+    restart: unless-stopped
+networks:
+  consultor-ia:
+    driver: bridge
+volumes:
+  postgres:
+    driver: local
