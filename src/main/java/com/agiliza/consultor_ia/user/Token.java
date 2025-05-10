@@ -1,5 +1,6 @@
 package com.agiliza.consultor_ia.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -11,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,17 +21,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 public class Token {
-
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
+
+    @Column(unique = true)
     private String token;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
     private LocalDateTime validatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "userId",nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
-
 }

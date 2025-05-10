@@ -4,17 +4,15 @@ import com.agiliza.consultor_ia.role.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -29,42 +27,40 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static jakarta.persistence.FetchType.EAGER;
+
+
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "_users")
+@Table(name = "_user")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private LocalDate birthDate;
+    @GeneratedValue
+    private Integer id;
+    private String firstname;
+    private String lastname;
+    private LocalDate dateOfBirth;
     @Column(unique = true)
     private String email;
     private String password;
     private boolean accountLocked;
     private boolean enabled;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = EAGER)
     private List<Role> roles;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
+
     @LastModifiedDate
     @Column(insertable = false)
-    private LocalDateTime updatedAt;
-
-    @Override
-    public String getName() {
-        return email;
-    }
+    private LocalDateTime lastModifiedDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -96,11 +92,24 @@ public class User implements UserDetails, Principal {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
+    }
+
+    public String fullName() {
+        return getFirstname() + " " + getLastname();
+    }
+
+    @Override
+    public String getName() {
+        return email;
+    }
+
+    public String getFullName() {
+        return firstname + " " + lastname;
     }
 }

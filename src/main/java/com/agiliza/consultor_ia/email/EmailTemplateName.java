@@ -1,13 +1,16 @@
 package com.agiliza.consultor_ia.email;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum EmailTemplateName {
 
-    ACTIVATION_ACCOUNT("activation-account");
+    ACTIVATE_ACCOUNT("activate_account")
+    ;
 
-    private final String templateName;
+
+    private final String name;
+    EmailTemplateName(String name) {
+        this.name = name;
+    }
 }
